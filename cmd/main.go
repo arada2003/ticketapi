@@ -42,6 +42,13 @@ func main() {
 	{
 		authReq.POST("/tickets", ticketHandler.CreateTicket)
 		authReq.GET("/tickets", ticketHandler.GetAllTicket)
+		authReq.GET("/tickets/:id", ticketHandler.GetTicketByID)
+		authReq.PUT("/tickets/:id", ticketHandler.UpdateTicketStatus)
+
+		authReq.GET("/users", ticketHandler.GetUsers)
+		authReq.GET("/users/:id", ticketHandler.GetUserByID)
+		authReq.GET("/users/email/:email", ticketHandler.GetUserByEmail)
+		authReq.GET("/users/firstname/:firstname", ticketHandler.GetUserByFirstname)
 	}
 	
 	r.Run(":80")

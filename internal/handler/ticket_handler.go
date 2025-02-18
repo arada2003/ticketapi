@@ -61,12 +61,13 @@ func (th *TicketHandler) UpdateTicketStatus(c *gin.Context) {
 	var req_status struct {
 		Status string `json:"status"`
 		Email  string `json:"email"`
+		Description	string `json:"description"`
 	}
 	if err := c.ShouldBindJSON(&req_status); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 		return
 	}
-	ticket, err := th.ticketService.UpdateTicketStatus(id, req_status.Status, req_status.Email)
+	ticket, err := th.ticketService.UpdateTicketStatus(id, req_status.Status, req_status.Email, req_status.Description)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

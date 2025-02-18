@@ -16,7 +16,7 @@ import (
 type TicketRepository interface {
 	CreateTicket(title, description, contact string) (*models.Ticket, error)
 	GetAllTicket(params models.TicketQueryParams) ([]models.Ticket, error)
-	UpdateStatus(id int, status string, email string) (*models.Ticket, error)
+	UpdateStatus(id int, status string, email string, description string) (*models.Ticket, error)
 	GetTicketByID(id int) (*models.Ticket, error)
 	GetUsers() ([]models.User, error)
 	GetUserByID(id int) (*models.User, error)
@@ -137,7 +137,7 @@ func (r *ticketRepository) GetTicketByID(id int) (*models.Ticket, error) {
 	return &t, nil
 }
 
-func (r *ticketRepository) UpdateStatus(id int, status string, email string) (*models.Ticket, error) {
+func (r *ticketRepository) UpdateStatus(id int, status string, email string, description string) (*models.Ticket, error) {
     var role string
     err := r.db.QueryRow(
         "SELECT role FROM users WHERE email = $1",
@@ -156,8 +156,8 @@ func (r *ticketRepository) UpdateStatus(id int, status string, email string) (*m
 
     var t models.Ticket
     err = r.db.QueryRow(
-        "UPDATE tickets SET status = $1,last_updated_by = $2, updated_at=now() WHERE id = $3 RETURNING id, title, description, contact, status, last_updated_by, created_at, updated_at",
-        status, email, id,
+        "UPDATE tickets SET status = $1,last_updated_by = $2, description = $3, updated_at=now() WHERE id = $4 RETURNING id, title, description, contact, status, last_updated_by, created_at, updated_at",
+        status, email, description, id,
     ).Scan(&t.ID, &t.Title, &t.Description, &t.Contact, &t.Status, &t.LastUpdatedBy, &t.CreatedAt, &t.UpdatedAt)
 
     if err == sql.ErrNoRows {

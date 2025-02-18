@@ -11,7 +11,7 @@ import (
 type TicketService interface {
 	CreateTicket(title, description, contact string) (*models.Ticket, error)
 	GetAllTicket(params models.TicketQueryParams) ([]models.Ticket, error)
-	UpdateTicketStatus(id int, status string, email string) (*models.Ticket, error)
+	UpdateTicketStatus(id int, status string, email string, description string) (*models.Ticket, error)
 	GetTicketByID(id int) (*models.Ticket, error)
 	GetUsers() ([]models.User, error)
 	GetUserByID(id int) (*models.User, error)
@@ -42,8 +42,8 @@ func (ts *ticketService) GetAllTicket(params models.TicketQueryParams) ([]models
 	return ts.repo.GetAllTicket(params)
 }
 
-func (ts *ticketService) UpdateTicketStatus(id int, status string, email string) (*models.Ticket, error) {
-	ticket, err := ts.repo.UpdateStatus(id, status, email)
+func (ts *ticketService) UpdateTicketStatus(id int, status string, email string, description string) (*models.Ticket, error) {
+	ticket, err := ts.repo.UpdateStatus(id, status, email, description)
 	if err != nil && strings.Contains(err.Error(), "no rows in result set") {
 		return nil, errors.New("ticket not found")
 	}
